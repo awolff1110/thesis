@@ -344,9 +344,63 @@ coef_test(lm_crime,
           test = "Satterthwaite")
 
 
-# using estimatr ----------------------------------------------------------
+# dif in dif 5% -----------------------------------------------------------
+
+murder_5pct <- lm(ln_murder_rate ~ factor(treated_5pct) * factor(after_1980),
+                data = county_data,
+                weights = population)
+
+murder_5pct_crve <- 
+  coef_test(lm_murder, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+robbery_5pct <- lm(ln_robbery_rate ~ factor(treated_5pct) * factor(after_1980),
+                 data = county_data,
+                 weights = population)
+
+robbery_5pct_crve <- 
+  coef_test(lm_robbery, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+crime_5pct <- lm(ln_crime_rate ~ factor(treated_5pct) * factor(after_1980),
+               data = county_data,
+               weights = population)
+
+crime_5pct_crve <- 
+  coef_test(lm_crime, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
 
 
 
+# regression tables -------------------------------------------------------
+
+
+stargazer(lm_murder, lm_robbery, lm_crime,
+          se = list(lm_murder_crve$SE, lm_robbery_crve$SE, lm_crime_crve$SE),
+          title = "Difference-in-differences in crime rates in U.S. counties by treatment group, 1970 to 1990",
+          covariate.labels = c("Treated", "After 1980", "Treated X After 1980", "Constant"),
+          dep.var.labels = c("log(Murder)", "log(Robbery)", "log(Crime)"),
+          digits = 2,
+          omit.stat = c("ser", "f", "rsq"),
+          label = "dif_in_dif",
+          model.numbers = FALSE,
+          type = "text")
+
+stargazer(murder_5pct, robbery_5pct, crime_5pct,
+          se = list(murder_5pct_crve$SE, robbery_5pct_crve$SE, crime_5pct_crve$SE),
+          title = "Difference-in-differences with 5% of foreign population threshold",
+          covariate.labels = c("Treated (5% Threshold)", "After 1980", "Treated (5% Threshold) X After 1980", "Constant"),
+          dep.var.labels = c("log(Murder)", "log(Robbery)", "log(Crime)"),
+          digits = 2,
+          omit.stat = c("ser", "f", "rsq"),
+          label = "dif_in_dif",
+          model.numbers = FALSE,
+          type = "text")
 
 
