@@ -351,7 +351,7 @@ murder_5pct <- lm(ln_murder_rate ~ factor(treated_5pct) * factor(after_1980),
                 weights = population)
 
 murder_5pct_crve <- 
-  coef_test(lm_murder, 
+  coef_test(murder_5pct, 
             vcov = "CR2",
             cluster = county_data$FIPS,
             test = "Satterthwaite")
@@ -361,7 +361,7 @@ robbery_5pct <- lm(ln_robbery_rate ~ factor(treated_5pct) * factor(after_1980),
                  weights = population)
 
 robbery_5pct_crve <- 
-  coef_test(lm_robbery, 
+  coef_test(robbery_5pct, 
             vcov = "CR2",
             cluster = county_data$FIPS,
             test = "Satterthwaite")
@@ -371,10 +371,110 @@ crime_5pct <- lm(ln_crime_rate ~ factor(treated_5pct) * factor(after_1980),
                weights = population)
 
 crime_5pct_crve <- 
-  coef_test(lm_crime, 
+  coef_test(crime_5pct, 
             vcov = "CR2",
             cluster = county_data$FIPS,
             test = "Satterthwaite")
+
+
+# dif in dif 20 pct -------------------------------------------------------
+
+murder_20pct <- lm(ln_murder_rate ~ factor(treated_20pct) * factor(after_1980),
+                  data = county_data,
+                  weights = population)
+
+murder_20pct_crve <- 
+  coef_test(murder_20pct, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+robbery_20pct <- lm(ln_robbery_rate ~ factor(treated_20pct) * factor(after_1980),
+                   data = county_data,
+                   weights = population)
+
+robbery_20pct_crve <- 
+  coef_test(robbery_20pct, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+crime_20pct <- lm(ln_crime_rate ~ factor(treated_20pct) * factor(after_1980),
+                 data = county_data,
+                 weights = population)
+
+crime_20pct_crve <- 
+  coef_test(crime_20pct, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+
+# dif no limit ------------------------------------------------------------
+
+murder_nl <- lm(ln_murder_rate ~ factor(treated_nl) * factor(after_1980),
+                   data = county_data,
+                   weights = population)
+
+murder_nl_crve <- 
+  coef_test(murder_nl, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+robbery_nl <- lm(ln_robbery_rate ~ factor(treated_nl) * factor(after_1980),
+                    data = county_data,
+                    weights = population)
+
+robbery_nl_crve <- 
+  coef_test(robbery_nl, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+crime_nl <- lm(ln_crime_rate ~ factor(treated_nl) * factor(after_1980),
+                  data = county_data,
+                  weights = population)
+
+crime_nl_crve <- 
+  coef_test(crime_nl, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+
+# dif 1k limit ------------------------------------------------------------
+
+murder_k <- lm(ln_murder_rate ~ factor(treated_k) * factor(after_1980),
+                data = county_data,
+                weights = population)
+
+murder_k_crve <- 
+  coef_test(murder_k, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+robbery_k <- lm(ln_robbery_rate ~ factor(treated_k) * factor(after_1980),
+                 data = county_data,
+                 weights = population)
+
+robbery_k_crve <- 
+  coef_test(robbery_k, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
+crime_k <- lm(ln_crime_rate ~ factor(treated_k) * factor(after_1980),
+               data = county_data,
+               weights = population)
+
+crime_k_crve <- 
+  coef_test(crime_k, 
+            vcov = "CR2",
+            cluster = county_data$FIPS,
+            test = "Satterthwaite")
+
 
 
 
@@ -384,7 +484,10 @@ crime_5pct_crve <-
 stargazer(lm_murder, lm_robbery, lm_crime,
           se = list(lm_murder_crve$SE, lm_robbery_crve$SE, lm_crime_crve$SE),
           title = "Difference-in-differences in crime rates in U.S. counties by treatment group, 1970 to 1990",
-          covariate.labels = c("Treated", "After 1980", "Treated X After 1980", "Constant"),
+          covariate.labels = c("Treated", 
+                               "After 1980", 
+                               "Treated X After 1980", 
+                               "Constant"),
           dep.var.labels = c("log(Murder)", "log(Robbery)", "log(Crime)"),
           digits = 2,
           omit.stat = c("ser", "f", "rsq"),
@@ -395,12 +498,58 @@ stargazer(lm_murder, lm_robbery, lm_crime,
 stargazer(murder_5pct, robbery_5pct, crime_5pct,
           se = list(murder_5pct_crve$SE, robbery_5pct_crve$SE, crime_5pct_crve$SE),
           title = "Difference-in-differences with 5% of foreign population threshold",
-          covariate.labels = c("Treated (5% Threshold)", "After 1980", "Treated (5% Threshold) X After 1980", "Constant"),
+          covariate.labels = c("Treated (5% Threshold)", 
+                               "After 1980", 
+                               "Treated (5% Threshold) X After 1980", 
+                               "Constant"),
           dep.var.labels = c("log(Murder)", "log(Robbery)", "log(Crime)"),
           digits = 2,
           omit.stat = c("ser", "f", "rsq"),
           label = "dif_in_dif",
           model.numbers = FALSE,
           type = "text")
+
+stargazer(murder_20pct, robbery_20pct, crime_20pct,
+          se = list(murder_20pct_crve$SE, robbery_20pct_crve$SE, crime_20pct_crve$SE),
+          title = "Difference-in-differences with 20% of foreign population threshold",
+          covariate.labels = c("Treated (20% Threshold)",
+                               "After 1980", 
+                               "Treated (20% Threshold) X After 1980", 
+                               "Constant"),
+          dep.var.labels = c("log(Murder)", "log(Robbery)", "log(Crime)"),
+          digits = 2,
+          omit.stat = c("ser", "f", "rsq"),
+          label = "dif_in_dif",
+          model.numbers = FALSE,
+          type = "text")
+
+stargazer(murder_nl, robbery_nl, crime_nl,
+          se = list(murder_nl_crve$SE, robbery_nl_crve$SE, crime_nl_crve$SE),
+          title = "Difference-in-differences with no limit on foreign born pop.",
+          covariate.labels = c("Treated (No Lim.)",
+                               "After 1980", 
+                               "Treated (No Lim.) X After 1980", 
+                               "Constant"),
+          dep.var.labels = c("log(Murder)", "log(Robbery)", "log(Crime)"),
+          digits = 2,
+          omit.stat = c("ser", "f", "rsq"),
+          label = "dif_in_dif",
+          model.numbers = FALSE,
+          type = "text")
+
+stargazer(murder_k, robbery_k, crime_k,
+          se = list(murder_k_crve$SE, robbery_k_crve$SE, crime_k_crve$SE),
+          title = "Difference-in-differences with no limit on foreign born pop.",
+          covariate.labels = c("Treated (No Lim.)",
+                               "After 1980", 
+                               "Treated (No Lim.) X After 1980", 
+                               "Constant"),
+          dep.var.labels = c("log(Murder)", "log(Robbery)", "log(Crime)"),
+          digits = 2,
+          omit.stat = c("ser", "f", "rsq"),
+          label = "dif_in_dif",
+          model.numbers = FALSE,
+          type = "text")
+
 
 
