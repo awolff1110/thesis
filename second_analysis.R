@@ -551,5 +551,7 @@ stargazer(murder_k, robbery_k, crime_k,
           model.numbers = FALSE,
           type = "text")
 
+stargazer(county_data)
+
 
 
